@@ -10,6 +10,11 @@ public class MaxSubSum1 {
         System.out.println(max);
     }
 
+    /**
+     * 暴力解法
+     * @param a
+     * @return
+     */
     public static int maxSubSum1(int a[]) {
         int i, j, k;
         int maxSum = 0, thisSum;
@@ -64,7 +69,4 @@ public class MaxSubSum1 {
     }
 
 
-    /**
-     * 分治 递归
-     */
 }

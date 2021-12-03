@@ -124,6 +124,8 @@ public class LinkList<T> implements IList<T>{
     }
 
 
+
+
     public static void main(String[] args) throws Exception {
         LinkList<Integer> l = new LinkList();
         l.insert(0,1);
