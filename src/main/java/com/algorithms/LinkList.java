@@ -41,19 +41,19 @@ public class LinkList<T> implements IList<T>{
     public void remove(int index) throws Exception {
         Node preNode = head;
         int preIndex;
+        //获取删除位置的前驱节点
         for (preIndex = -1; preIndex < index - 1 && preNode != null; preIndex++){
             preNode = preNode.next;
         }
         if (preIndex > index - 1 || preNode == null){
             throw new IndexOutOfBoundsException("角标越界！");
         }
-
-
+        preNode.next = preNode.next.next;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return length() == 0;
     }
 
     @Override
@@ -72,7 +72,13 @@ public class LinkList<T> implements IList<T>{
 
     @Override
     public int length() {
-        return 0;
+        Node h = head;
+        int i = 0;
+        while(h.next != null){
+            h = h.next;
+            i ++;
+        }
+        return i;
     }
 
     @Override
@@ -89,6 +95,50 @@ public class LinkList<T> implements IList<T>{
 
     @Override
     public void display() {
+        Node h = head;
+        while(h != null){
+            System.out.println(h.data);
+            h = h.next;
+        }
+    }
+
+    /**
+     * 所有的都逆转
+     */
+    public void reverse() {
+        Node cur = head; //标记头节点
+        Node pre = null; //标记前驱节点
+        Node temp;
+        while(cur != null) {
+            // 保存当前节点的下一个节点
+            temp = cur.next;
+
+            //cur.next 指向pre 将cur的指针 顺序 反方向
+            cur.next = pre;
+            //pre cur 继续向后移动
+            pre = cur;
+            cur = temp;
+        }
+        //最后一个节点变成新的节点
+        head = pre;
+    }
+
+
+
+
+    public static void main(String[] args) throws Exception {
+        LinkList<Integer> l = new LinkList();
+        l.insert(0,1);
+        l.insert(1,2);
+        l.insert(2,4);
+        System.out.println(l.length());
+        l.remove(0);
+        l.display();
+
+
+        l.reverse();
+        System.out.println("-----------------翻转");
+        l.display();
 
     }
 }
