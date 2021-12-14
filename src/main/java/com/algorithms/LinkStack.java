@@ -1,5 +1,9 @@
 package com.algorithms;
 
+/**
+ * 链标实现 栈
+ * @param <T>
+ */
 public class LinkStack<T> implements IStack<T>{
     //栈顶元素
     StackNode top;
