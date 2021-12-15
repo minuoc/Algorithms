@@ -13,7 +13,7 @@ public class Stack<T> implements IStack<T>{
     int top;
 
     public Stack() {
-        this.top = 0  ;
+        this.top = 0;
     }
 
     @Override
@@ -57,4 +57,6 @@ public class Stack<T> implements IStack<T>{
             return elements[top - 1];
         }
     }
+
+
 }

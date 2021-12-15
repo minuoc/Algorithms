@@ -3,6 +3,7 @@ package com.algorithms;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * 使用java 实现 二叉树的二叉链标存储
@@ -91,10 +92,117 @@ class LinkBinTree<T> {
      */
     public void preOrder(TreeNode<T> node) {
         if (node != null){
-            System.out.println(node.getData() + "");
+            System.out.print(node.getData() + " ");
             preOrder(node.getLeft());
             preOrder(node.getRight());
         }
+    }
+
+    /**
+     * 非递归实现 先序遍历
+     * @param node
+     */
+    public void nonRecPreOrder(TreeNode<T> node) throws Exception {
+        //创建并初始化堆栈
+        LinkStack<TreeNode<T>> nodeStack = new LinkStack<>();
+        TreeNode<T> nodeTemp = node; //nodeTemp 作为遍历指针
+        while(nodeTemp != null || !nodeStack.isEmpty()){
+            if (nodeTemp != null){ // 根指针非空 遍历左子树
+                nodeStack.push(nodeTemp); //根指针进栈
+                System.out.println(nodeStack.top().getData()); //根指针退栈  访问根节点
+                nodeTemp = nodeTemp.getLeft();  //每次遇到非空节点 先向 左走
+            }
+            if (!nodeStack.isEmpty()){
+                //再向右子树走
+                nodeTemp =  nodeStack.pop();
+                nodeTemp = nodeTemp.getRight();
+            }
+        }
+    }
+
+    /**
+     * 递归实现 中序遍历
+     * @param node
+     */
+    public void inOrder(TreeNode<T> node) {
+        if (node != null) {
+            inOrder(node.getLeft());
+            System.out.print(node.getData() + " ");
+            inOrder(node.getRight());
+        }
+    }
+
+
+    /**
+     * 中序遍历 非递归
+     * @param node
+     * @throws Exception
+     */
+    public void nonRecInOrder(TreeNode<T> node) throws Exception {
+
+        //创建并初始化堆栈
+        LinkStack<TreeNode<T>> nodeStack = new LinkStack<>();
+        TreeNode<T> nodeTemp = node; //nodeTemp 作为遍历指针
+        while(nodeTemp != null || !nodeStack.isEmpty()){
+            if (nodeTemp != null){
+                nodeStack.push(nodeTemp);
+                nodeTemp = nodeTemp.getLeft(); //先向左子树走
+            }
+            if (!nodeStack.isEmpty()){
+                nodeTemp =  nodeStack.pop(); //根指针退栈 访问根节点
+                System.out.print(nodeTemp.getData() + "");
+                nodeTemp = nodeTemp.getRight(); //再向右子树走
+            }
+        }
+    }
+
+    /**
+     * 递归 后序遍历
+     * @param node
+     */
+    public void postOrder(TreeNode<T> node){
+        if (node != null) {
+            postOrder(node.getLeft());
+            postOrder(node.getRight());
+            System.out.println(node.getData());
+        }
+    }
+
+    /**
+     * 非递归 后序遍历
+     * @param node
+     */
+    public void nonRecPostOrder(TreeNode<T> node) throws Exception {
+        //创建并初始化堆栈
+        LinkStack<TreeNode<T>> nodeStack = new LinkStack<>();
+        TreeNode<T> nodeTemp = node; //nodeTemp 作为遍历指针
+        TreeNode<T> preNode = null; //表示最近依次的访问节点
+        while(nodeTemp != null || !nodeStack.isEmpty()){
+            if (nodeTemp != null){
+                nodeStack.push(nodeTemp);
+                nodeTemp = nodeTemp.getLeft(); //先向左子树走
+            }
+            nodeTemp = nodeStack.top();
+            if (nodeTemp.getRight() == null || nodeTemp.getRight() == preNode){
+                nodeTemp = nodeStack.pop();
+                System.out.print(nodeTemp.getData() + " ");
+                preNode = nodeTemp;
+                //此处很重要 ，将 刚出栈的节点设置为空， 对应于while循环的条件之一，否则陷入死循环
+                nodeTemp = null;
+
+            } else {
+                nodeTemp = nodeTemp.getRight(); //访问右子树
+            }
+        }
+
+    }
+
+
+    public void levelOrder(TreeNode<T> root) {
+        Queue<TreeNode<T>> nodeQueue = new LinkedList<>();
+
+
+
     }
 
 

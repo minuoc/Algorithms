@@ -48,4 +48,8 @@ public class LinkStack<T> implements IStack<T>{
         }
         return (T) top.data;
     }
+
+
+
+
 }
