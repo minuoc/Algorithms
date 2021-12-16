@@ -109,12 +109,13 @@ class LinkBinTree<T> {
         while(nodeTemp != null || !nodeStack.isEmpty()){
             if (nodeTemp != null){ // 根指针非空 遍历左子树
                 nodeStack.push(nodeTemp); //根指针进栈
-                System.out.println(nodeStack.top().getData()); //根指针退栈  访问根节点
+                System.out.print(nodeStack.peek().getData() + " "); //根指针退栈  访问根节点
                 nodeTemp = nodeTemp.getLeft();  //每次遇到非空节点 先向 左走
-            }
-            if (!nodeStack.isEmpty()){
-                //再向右子树走
-                nodeTemp =  nodeStack.pop();
+            } else {
+                nodeTemp = nodeStack.pop();
+                if (nodeTemp == null) {
+                    break;
+                }
                 nodeTemp = nodeTemp.getRight();
             }
         }
@@ -147,12 +148,15 @@ class LinkBinTree<T> {
             if (nodeTemp != null){
                 nodeStack.push(nodeTemp);
                 nodeTemp = nodeTemp.getLeft(); //先向左子树走
-            }
-            if (!nodeStack.isEmpty()){
-                nodeTemp =  nodeStack.pop(); //根指针退栈 访问根节点
-                System.out.print(nodeTemp.getData() + "");
+            }else {
+                nodeTemp = nodeStack.pop(); //根指针退栈 访问根节点
+                if (nodeTemp == null) {
+                    break;
+                }
+                System.out.print(nodeTemp.getData() + " ");
                 nodeTemp = nodeTemp.getRight(); //再向右子树走
             }
+
         }
     }
 
@@ -164,7 +168,7 @@ class LinkBinTree<T> {
         if (node != null) {
             postOrder(node.getLeft());
             postOrder(node.getRight());
-            System.out.println(node.getData());
+            System.out.print(node.getData() + " ");
         }
     }
 
@@ -178,11 +182,14 @@ class LinkBinTree<T> {
         TreeNode<T> nodeTemp = node; //nodeTemp 作为遍历指针
         TreeNode<T> preNode = null; //表示最近依次的访问节点
         while(nodeTemp != null || !nodeStack.isEmpty()){
-            if (nodeTemp != null){
+            while (nodeTemp != null){ //一直向左走，遍历左子树
                 nodeStack.push(nodeTemp);
                 nodeTemp = nodeTemp.getLeft(); //先向左子树走
             }
-            nodeTemp = nodeStack.top();
+            nodeTemp = nodeStack.peek();
+            if (nodeTemp == null){
+                break;
+            }
             if (nodeTemp.getRight() == null || nodeTemp.getRight() == preNode){
                 nodeTemp = nodeStack.pop();
                 System.out.print(nodeTemp.getData() + " ");
@@ -193,14 +200,65 @@ class LinkBinTree<T> {
             } else {
                 nodeTemp = nodeTemp.getRight(); //访问右子树
             }
+
         }
 
     }
 
-
+    /**
+     * 层次遍历
+     * @param root
+     */
     public void levelOrder(TreeNode<T> root) {
         Queue<TreeNode<T>> nodeQueue = new LinkedList<>();
+        TreeNode<T> node = null;
+        nodeQueue.add(root); //根节点 入队
+        while(!nodeQueue.isEmpty()){  // 队列不为空
+            node = nodeQueue.peek();
+            System.out.print(node.getData() + " ");
+            nodeQueue.poll(); //队头元素出队
+            if (node.getLeft() != null){  //左字数不空，左子树 入队列
+                nodeQueue.add(node.getLeft());
+            }
+            if (node.getRight() != null){
+                nodeQueue.add(node.getRight());
+            }
 
+        }
+
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        //将一个数组转化为一颗完全二叉树
+        Object[] array = {1,2,3,4,5,6,7,8};
+        LinkBinTree bt = new LinkBinTree();
+        TreeNode root = bt.buildTree(array);
+        System.out.print("树的高度：");
+        System.out.println(bt.height(root));
+        System.out.print("节点的个数：");
+        System.out.println(bt.size(root));
+        System.out.println("先序遍历：");
+        bt.preOrder(root);
+        System.out.println("\n"+"非递归先序遍历：");
+        bt.nonRecPreOrder(root);
+        System.out.println();
+
+
+        System.out.println("中序遍历：");
+        bt.inOrder(root);
+        System.out.println("\n"+"非递归中序遍历：");
+        bt.nonRecInOrder(root);
+        System.out.println();
+
+        System.out.println("后序遍历：");
+        bt.postOrder(root);
+        System.out.println("\n"+"非递归后序遍历：");
+        bt.nonRecPostOrder(root);
+        System.out.println();
+
+        System.out.println("层次遍历：");
+        bt.levelOrder(root);
 
 
     }
