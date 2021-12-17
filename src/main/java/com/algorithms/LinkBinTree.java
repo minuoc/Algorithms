@@ -25,6 +25,7 @@ class LinkBinTree<T> {
         root = new TreeNode(data);
     }
 
+
     /**
      * 将 一个数组转化为一颗完全二叉树
      *
