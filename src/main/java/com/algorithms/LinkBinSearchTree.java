@@ -116,6 +116,8 @@ public class LinkBinSearchTree {
     }
 
 
+
+
     /**
      * 删除数据域为data的节点
      * 按三种情况处理
