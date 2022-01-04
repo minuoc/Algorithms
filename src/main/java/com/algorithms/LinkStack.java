@@ -1,7 +1,8 @@
 package com.algorithms;
 
+
 /**
- * 链标实现 栈
+ * 链表 实现栈
  * @param <T>
  */
 public class LinkStack<T> implements IStack<T>{
