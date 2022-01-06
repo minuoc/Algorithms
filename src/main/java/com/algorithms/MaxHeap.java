@@ -1,5 +1,7 @@
 package com.algorithms;
 
+import java.util.Arrays;
+
 /**
  * 顺序 结构的 堆
  * @param <T>
@@ -28,7 +30,11 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
         initialized = true;
     }
 
-    private void checkCapacity(int initialCapacity) {
+    private void checkCapacity(int capacity) {
+        if (capacity > MAX_CAPACITY){
+            throw new IllegalStateException("Attempt to create a bag whose capacity exeeds allowed" +
+                    "maximum of " + MAX_CAPACITY);
+        }
     }
 
     /**
@@ -51,6 +57,10 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
             parentIndex = newIndex / 2;
         }
 
+        /**
+         * 上面的也可以使用 哨兵 来控制  即在数组的0 的位置 放入new Entry  可以省略 parentIndex > 0 的判断
+         */
+
         //最后将新项放入到正确的位置
         heap[newIndex] = newEntry;
         lastIndex ++;
@@ -59,12 +69,62 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
     }
 
+    private void ensureCapacity() {
+        if (lastIndex >= heap.length - 1) {
+            int newCapacity = 2 * (heap.length - 1);
+            checkCapacity(newCapacity);
+            heap = Arrays.copyOf(heap,newCapacity);
+        }
+
+    }
+
     private void checkInitialization() {
+        if (!initialized){
+            throw new SecurityException("ArrayQueue object is corrupt");
+        }
     }
 
     @Override
     public T removeMax() {
-        return null;
+        checkInitialization();
+        T root = null;
+        if (!isEmpty()) {
+            root = heap[1];
+            heap[1] = heap[lastIndex];
+            lastIndex --;
+            reheap(1);
+        }
+        return root;
+    }
+
+    /**
+     *  将半堆转化为 堆
+     *  Transforms the semiheap at rootIndex into a heap.
+     * @param rootIndex
+     */
+    private void reheap(int rootIndex) {
+        boolean done = false;
+        T orphan = heap[rootIndex];
+        int leftChildIndex = 2 * rootIndex;
+        //！done 且 heap[rootIndex]有一个孩子
+        while(!done && (leftChildIndex <= lastIndex)) {
+            int largerChildIndex = leftChildIndex;
+            int rightChildIndex = leftChildIndex + 1;
+            if (rightChildIndex <= lastIndex
+                    && heap[rightChildIndex].compareTo(heap[largerChildIndex]) > 0){
+                largerChildIndex = rightChildIndex;
+            }
+
+            if (orphan.compareTo(heap[largerChildIndex]) < 0) {
+                heap[rootIndex] = heap[largerChildIndex];
+                rootIndex = largerChildIndex;
+                leftChildIndex = 2 * rootIndex;
+            }else {
+                done = true;
+            }
+        }
+        heap[rootIndex] = orphan;
+
     }
 
     @Override
