@@ -110,11 +110,12 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
         while(!done && (leftChildIndex <= lastIndex)) {
             int largerChildIndex = leftChildIndex;
             int rightChildIndex = leftChildIndex + 1;
+            // 从左右子节点中 获取 哪个比较大
             if (rightChildIndex <= lastIndex
                     && heap[rightChildIndex].compareTo(heap[largerChildIndex]) > 0){
                 largerChildIndex = rightChildIndex;
             }
-
+            // 比较
             if (orphan.compareTo(heap[largerChildIndex]) < 0) {
                 heap[rootIndex] = heap[largerChildIndex];
                 rootIndex = largerChildIndex;
@@ -127,23 +128,77 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
     }
 
+
+    private static <T extends Comparable<? super T>>
+        void reheap(T[] heap,int rootIndex,int lastIndex) {
+        boolean done = false;
+        T orphan = heap[rootIndex];
+        int leftChildIndex = 2 * rootIndex + 1;
+        while(!done && (leftChildIndex <= lastIndex)){
+            int largerChildIndex = leftChildIndex;
+            int rightChildIndex = leftChildIndex + 1;
+            if ((rightChildIndex <= lastIndex) && heap[rightChildIndex].compareTo(heap[largerChildIndex]) > 0) {
+                largerChildIndex = rightChildIndex;
+            }
+            if (orphan.compareTo(heap[largerChildIndex]) < 0){
+                heap[rootIndex] = heap[largerChildIndex];
+                rootIndex = largerChildIndex;
+                leftChildIndex = 2 * rootIndex + 1;
+            } else {
+                done = true;
+            }
+
+        }
+        heap[rootIndex] = orphan;
+    }
+
+    public static <T extends Comparable<? super T>> void heapSort(T[] array, int n){
+        //创建堆
+        for (int rootIndex = n / 2; rootIndex >= 0; rootIndex --){
+            reheap(array,rootIndex,n-1);
+        }
+        swap(array,0,n-1);
+        for (int lastIndex = n - 2; lastIndex > 0; lastIndex --){
+            reheap(array,0,lastIndex);
+            swap(array,0,lastIndex);
+        }
+
+    }
+
+    private static <T extends Comparable<? super T>>
+        void swap(T[] array,int firstIndex, int secondIndex) {
+        T temp = array[firstIndex];
+        array[firstIndex] = array[secondIndex];
+        array[secondIndex] = temp;
+    }
+
     @Override
     public T getMax() {
-        return null;
+        checkInitialization();
+        T root = null;
+        if (!isEmpty()) {
+            root = heap[1];
+        }
+        return root;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return lastIndex < 1;
     }
 
     @Override
     public int getSize() {
-        return 0;
+        return lastIndex;
     }
 
     @Override
     public void clear() {
-
+        checkInitialization();
+        while (lastIndex > -1){
+            heap[lastIndex] = null;
+            lastIndex --;
+        }
+        lastIndex = 0;
     }
 }
